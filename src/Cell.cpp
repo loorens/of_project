@@ -7,7 +7,8 @@ Cell::Cell(float _x, float _y)
 	y = _y;
 	energy = 0;
 	absorbedEnergy = 0;
-	//neighbors = vector<Cell *>;
+	//neighbors = vector<Cell *>; 
+
 }
 
 ///add new neighbour to this cell
