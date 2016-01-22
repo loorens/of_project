@@ -9,7 +9,7 @@ Cell::Cell(float _x, float _y)
 	absorbedEnergy = 0;
 	//neighbors = vector<Cell *>; 
 
-
+	//testowy komentarz
 }
 
 ///add new neighbour to this cell
