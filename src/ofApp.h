@@ -31,5 +31,5 @@ class ofApp : public ofBaseApp{
 
 		
 		CellBackgroud * cellBackgroud;
-		bool displayInfo;
+		bool displayInfo, displayBackground;
 };
