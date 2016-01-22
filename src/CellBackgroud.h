@@ -12,12 +12,12 @@ private:
 	int counter;
 
 public:
-	//CellBackgroud();
+
 	CellBackgroud(int _width, int _height, int _distance);
 	void setup();
 	void draw();
 	void update();
-	~CellBackgroud();
+	void boom();
 
 };
 

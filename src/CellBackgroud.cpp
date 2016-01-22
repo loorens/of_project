@@ -1,11 +1,6 @@
 #include "CellBackgroud.h"
 
 
-
-//CellBackgroud::CellBackgroud()
-//{
-//}
-
 ///Create backgroud, set width, height and distance between cells
 CellBackgroud::CellBackgroud(int _width, int _height, int _distance)
 {
@@ -90,13 +85,19 @@ void CellBackgroud::update()
 
 	if ((counter++) % 10 == 0)
 	{
-		cells[(int)ofRandom(cells.size())]->fillUpEnergy();
+		int r = (int)ofRandom(cells.size());
+		cells[r]->fillUpEnergy();
 	}
 	
 
 }
 
-
-CellBackgroud::~CellBackgroud()
+///Fill up energy of 10% of cells
+void CellBackgroud::boom()
 {
+	for (int i = 0; i < cells.size() / 10; i++)
+	{
+		int r = (int)ofRandom(cells.size());
+		cells[r]->fillUpEnergy();
+	}
 }
