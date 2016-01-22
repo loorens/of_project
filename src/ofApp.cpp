@@ -5,15 +5,27 @@ void ofApp::setup(){
 	ofSetWindowTitle("Projekt DT");
 	ofSetFrameRate(60);
 	ofEnableSmoothing();
+
+	//--------------------------------------------------------------
 	ofBackground(0, 0, 0);
 	displayBackground = true;
-
 	cellBackgroud = new CellBackgroud(ofGetWidth(), ofGetHeight(), 25);
 	cellBackgroud->setup();
+	//--------------------------------------------------------------
+
+	cam.setDeviceID(1);
+	cam.setup(640,480);
+	cam.setDesiredFrameRate(60);
+
+
+	
+
+
 }
 
 //--------------------------------------------------------------
 void ofApp::update(){
+	cam.update();
 	cellBackgroud->update();
 }
 
@@ -29,7 +41,14 @@ void ofApp::draw(){
 	{
 		drawInfo();
 	}
+	if (displayCamera)
+	{
+		ofSetColor(255, 255, 255);
+		cam.draw(ofGetWidth() - 320 - 20, ofGetHeight() - 240 - 20, 320, 240);
+	}
+
 }
+	
 
 /* Przyk³adowe klawisze do wykorzystania:
 OF_KEY_F1, OF_KEY_F2, OF_KEY_F3, OF_KEY_F4, OF_KEY_F5, OF_KEY_F6, OF_KEY_F7,
@@ -53,6 +72,10 @@ void ofApp::keyPressed(int key){
 	case 'b':
 	case 'B':
 		displayBackground = !displayBackground;
+		break; 
+	case 'c':
+	case 'C':
+		displayCamera = !displayCamera;
 		break;
 	case ' ':
 		cellBackgroud->boom();
@@ -125,6 +148,7 @@ void ofApp::drawInfo()
 	info += "[SPACE] - backgroud boom\n";
 	info += "[b] - backgroud toggle\n";
 	info += "[f] - fulscreen toggle\n";
+	info += "[c] - camera toggle\n";
 
 	ofSetColor(255, 255, 255);
 	ofDrawBitmapString(info, 10, 15);

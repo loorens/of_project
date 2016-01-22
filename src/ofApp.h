@@ -31,5 +31,8 @@ class ofApp : public ofBaseApp{
 
 		
 		CellBackgroud * cellBackgroud;
-		bool displayInfo, displayBackground;
+		ofVideoGrabber cam;
+
+		bool displayInfo, displayBackground, displayCamera;
+
 };
