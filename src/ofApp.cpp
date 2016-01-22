@@ -1,5 +1,7 @@
 #include "ofApp.h"
 
+using namespace ofxCv;
+
 //--------------------------------------------------------------
 void ofApp::setup(){
 	ofSetWindowTitle("Projekt DT");
@@ -17,7 +19,8 @@ void ofApp::setup(){
 	cam.setup(640,480);
 	cam.setDesiredFrameRate(60);
 
-
+	runningBackground.setLearningTime(600);
+	runningBackground.setThresholdValue(10);
 	
 
 
@@ -26,6 +29,14 @@ void ofApp::setup(){
 //--------------------------------------------------------------
 void ofApp::update(){
 	cam.update();
+
+	if (cam.isFrameNew())
+	{
+		//TODO: zrobiæ grayscale
+		runningBackground.update(cam, thresholdedBackgroundImage);
+		thresholdedBackgroundImage.update();
+	}
+
 	cellBackgroud->update();
 }
 
@@ -46,7 +57,8 @@ void ofApp::draw(){
 		ofSetColor(255, 255, 255);
 		cam.draw(ofGetWidth() - 320 - 20, ofGetHeight() - 240 - 20, 320, 240);
 	}
-
+	ofSetColor(255, 255, 255);
+	thresholdedBackgroundImage.draw(10, 300);
 }
 	
 
@@ -76,6 +88,10 @@ void ofApp::keyPressed(int key){
 	case 'c':
 	case 'C':
 		displayCamera = !displayCamera;
+		break;
+	case 'r':
+	case 'R':
+		runningBackground.reset();
 		break;
 	case ' ':
 		cellBackgroud->boom();
@@ -149,6 +165,7 @@ void ofApp::drawInfo()
 	info += "[b] - backgroud toggle\n";
 	info += "[f] - fulscreen toggle\n";
 	info += "[c] - camera toggle\n";
+	info += "[r] - threshold background toggle\n";
 
 	ofSetColor(255, 255, 255);
 	ofDrawBitmapString(info, 10, 15);

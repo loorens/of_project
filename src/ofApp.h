@@ -2,6 +2,7 @@
 
 #include "ofMain.h"
 #include "CellBackgroud.h"
+#include "ofxCv.h"
 
 class ofApp : public ofBaseApp{
 
@@ -32,7 +33,9 @@ class ofApp : public ofBaseApp{
 		
 		CellBackgroud * cellBackgroud;
 		ofVideoGrabber cam;
+		ofxCv::RunningBackground runningBackground;
+		ofImage thresholdedBackgroundImage;
 
 		bool displayInfo, displayBackground, displayCamera;
-
+		
 };
