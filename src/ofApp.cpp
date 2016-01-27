@@ -34,7 +34,7 @@ void ofApp::setup() {
 
 
 	imageDecimated.allocate(desWidth, desHeight);
-	
+
 }
 
 //--------------------------------------------------------------
@@ -90,14 +90,14 @@ void ofApp::update() {
 
 
 		//znajdz kontury
-		contourFinder.findContours(mask, 10, 10000, 20, false);
+		contourFinder.findContours(mask, 20, (320 * 240) , 5, false);
 
 		//przechowuj œrodki obiektów 
 		vector<ofxCvBlob>  &blobs = contourFinder.blobs;
 		int n = blobs.size();	//liczba bloków
 		obj.resize(n);		//zmiana rozmiaru wektora
 
-		for (int i = 0; i < n; i++) 
+		for (int i = 0; i < n; i++)
 		{
 			obj[i] = blobs[i].centroid;	//uzupe³nienie wektora œrodkami
 		}
@@ -115,7 +115,7 @@ void ofApp::draw() {
 		cellBackgroud->draw();
 	}
 
-	
+
 	if (displayCamera)
 	{
 		ofSetColor(255, 255, 255);
@@ -133,7 +133,12 @@ void ofApp::draw() {
 
 		contourFinder.draw(320, 240);
 	}
-
+	if (displayConturs)
+	{
+		ofSetColor(255, 255, 255);
+		cam.draw(0, 0, ofGetWidth(), ofGetHeight());
+		contourFinder.draw(0, 0, ofGetWidth(), ofGetHeight());
+	}
 
 
 	if (displayInfo)
@@ -154,13 +159,13 @@ void ofApp::keyPressed(int key) {
 
 	switch (key)
 	{
-	case OF_KEY_UP: 
+	case OF_KEY_UP:
 		//zwiêkszanie progu binaryzacji
 		threshold += 2;
 		if (threshold > 255)
 			threshold = 255;
 		break;
-	case OF_KEY_DOWN: 
+	case OF_KEY_DOWN:
 		//zmiejszanie progu binaryzacji
 		threshold -= 2;
 		if (threshold < 0)
@@ -176,9 +181,10 @@ void ofApp::keyPressed(int key) {
 		//uruchamianie trybu pe³noekranowego ???
 		ofToggleFullscreen();
 		break;
-	case 'z':
-	case 'Z':
-		//nic
+	case 'k':
+	case 'K':
+		//rysowanie konturów na ekranie
+		displayConturs = !displayConturs;
 		break;
 	case 'b':
 	case 'B':
@@ -264,7 +270,7 @@ void ofApp::dragEvent(ofDragInfo dragInfo) {
 void ofApp::drawInfo()
 {
 	ofSetColor(77, 77, 77, 180);
-	ofDrawRectangle(0, 0, 300, 100);
+	ofDrawRectangle(0, 0, 300, 150);
 
 	string info = "";
 	info += "[i] - informacje\n";
@@ -275,6 +281,7 @@ void ofApp::drawInfo()
 	info += "[b] - cell backgroud toggle\n";
 	info += "[f] - fulscreen toggle\n";
 	info += "[c] - camera toggle\n";
+	info += "[k] - conturs toggle\n";
 
 	ofSetColor(255, 255, 255);
 	ofDrawBitmapString(info, 10, 15);

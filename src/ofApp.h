@@ -48,7 +48,7 @@ class ofApp : public ofBaseApp{
 
 		vector<ofPoint> obj;	//object's centers
 
-		bool displayInfo, displayBackground, displayCamera, displayVideo;
+		bool displayInfo, displayBackground, displayCamera, displayVideo, displayConturs;
 
 		bool captureBackground;
 		int desWidth, desHeight, threshold;

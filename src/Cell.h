@@ -5,7 +5,7 @@
 class Cell
 {
 private:
-	float x, y;
+	float x, y, dim;
 	float energy, absorbedEnergy;
 	vector<Cell*> neighbors;
 	void absorbEnergy(float e);

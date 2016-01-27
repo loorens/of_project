@@ -7,9 +7,7 @@ Cell::Cell(float _x, float _y)
 	y = _y;
 	energy = 0;
 	absorbedEnergy = 0;
-	//neighbors = vector<Cell *>; 
-
-	//testowy komentarz
+	dim = 2;
 }
 
 ///add new neighbour to this cell
@@ -57,10 +55,10 @@ void Cell::update()
 void Cell::draw()
 {
 	//iloœæ koloru niebieskiego zale¿y od iloœci energi i jest w granicy 200 do 255
-	float blue = ofMap(energy, 0, 1, 200, 255);
-	ofSetColor(120, 220, blue);
+	float blue = ofMap(energy, 0, 1, 150, 200);
+	ofSetColor(50, 50, blue);
 	//rozmiar komórki zale¿y od pierwiastka energii
 	//³atwiej uzyskaæ wiêkszy rozmiar przy ma³ej iloœci energii
-	float radius = ofMap(sqrt(energy), 0, 1, 5, 25);
-	ofCircle(x, y, radius);
+	dim = ofMap(sqrt(energy), 0, 1, 2, 8);
+	ofCircle(x, y, dim);
 }
