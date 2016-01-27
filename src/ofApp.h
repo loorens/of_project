@@ -2,7 +2,7 @@
 
 #include "ofMain.h"
 #include "CellBackgroud.h"
-#include "ofxCv.h"
+#include "ofxOpenCv.h"
 
 class ofApp : public ofBaseApp{
 
@@ -33,9 +33,28 @@ class ofApp : public ofBaseApp{
 		
 		CellBackgroud * cellBackgroud;
 		ofVideoGrabber cam;
-		ofxCv::RunningBackground runningBackground;
-		ofImage thresholdedBackgroundImage;
+		ofVideoPlayer video;
 
-		bool displayInfo, displayBackground, displayCamera;
+		ofxCvColorImage image;
+		ofxCvColorImage imageDecimated;
+
+		ofxCvGrayscaleImage grayImage;
+		ofxCvGrayscaleImage blurred;
+		ofxCvGrayscaleImage background;
+		ofxCvGrayscaleImage diff;
+		ofxCvGrayscaleImage mask;
+
+		ofxCvContourFinder 	contourFinder;
+
+		vector<ofPoint> obj;	//object's centers
+
+		//ofxCv::RunningBackground runningBackground;
+		//ofImage thresholdedBackgroundImage;
+		//ofImage grayscaledImage;
+		//ofImage prevImage;
+		bool displayInfo, displayBackground, displayCamera, displayVideo;
+
+		bool captureBackground;
+		int desWidth, desHeight, threshold;
 		
 };
