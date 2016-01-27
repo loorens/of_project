@@ -20,6 +20,10 @@ void ofApp::setup() {
 	threshold = 20;
 	captureBackground = true;
 
+	scaleX = (float)ofGetWidth() / (float)desWidth;
+	scaleY = (float)ofGetHeight() / (float)desHeight;
+
+
 	cam.listDevices();
 	cam.setDeviceID(1);
 	//cam.setup(640, 480);
@@ -90,21 +94,34 @@ void ofApp::update() {
 
 
 		//znajdz kontury
-		contourFinder.findContours(mask, 20, (320 * 240) , 5, false);
+		contourFinder.findContours(mask, 20, (320 * 240), 5, false);
 
-		//przechowuj œrodki obiektów 
-		vector<ofxCvBlob>  &blobs = contourFinder.blobs;
-		int n = blobs.size();	//liczba bloków
-		obj.resize(n);		//zmiana rozmiaru wektora
 
-		for (int i = 0; i < n; i++)
+		contourPoints.clear();
+
+		ofPoint point;
+		for (int i = 0; i < contourFinder.blobs.size(); i++)
 		{
-			obj[i] = blobs[i].centroid;	//uzupe³nienie wektora œrodkami
+			for (int j = 0; j < contourFinder.blobs[i].pts.size(); j++)
+			{
+				point = contourFinder.blobs[i].pts[j];
+				//skalowanie
+				point.x = point.x * scaleX;
+				point.y = point.y * scaleY;
+
+				contourPoints.push_back(point);
+			}
 		}
 
+
+		cellBackgroud->updateWithPoints(contourPoints);
+	}
+	else
+	{
+		cellBackgroud->update(false);
 	}
 
-	cellBackgroud->update();
+	
 }
 
 //--------------------------------------------------------------
@@ -135,7 +152,7 @@ void ofApp::draw() {
 	}
 	if (displayConturs)
 	{
-		ofSetColor(255, 255, 255);
+		ofSetColor(255, 255, 255, 64);
 		cam.draw(0, 0, ofGetWidth(), ofGetHeight());
 		contourFinder.draw(0, 0, ofGetWidth(), ofGetHeight());
 	}
@@ -156,6 +173,7 @@ OF_KEY_PAGE_DOWN, OF_KEY_HOME, OF_KEY_END, OF_KEY_INSERT, OF_KEY_RETURN, OF_KEY_
 */
 //--------------------------------------------------------------
 void ofApp::keyPressed(int key) {
+	int n;
 
 	switch (key)
 	{
@@ -203,8 +221,19 @@ void ofApp::keyPressed(int key) {
 		break;
 	case 'v':
 	case 'V':
-		//?????????????????
+		//wyswietlanie duzej liczy rzeczy xD
 		displayVideo = !displayVideo;
+		break;
+	case 'z':
+	case 'Z':
+		//Debug
+		n = 0;
+		for (int i = 0; i < contourFinder.blobs.size(); i++)
+		{
+			n += contourFinder.blobs[i].nPts;
+		}
+		printf("%d\n", n);
+
 		break;
 	case ' ':
 		//SPACJA - boom t³a 

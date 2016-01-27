@@ -3,11 +3,14 @@
 ///Initialize new cell with coordinates
 Cell::Cell(float _x, float _y)
 {
+	pos.x = _x;
+	pos.y = _y;
 	x = _x;
 	y = _y;
 	energy = 0;
 	absorbedEnergy = 0;
 	dim = 2;
+	touched = 0;
 }
 
 ///add new neighbour to this cell
@@ -16,10 +19,25 @@ void Cell::addNeighbors(Cell * c)
 	neighbors.push_back(c);
 }
 
+ofPoint Cell::getPosition()
+{
+	return pos;
+}
+
 ///Set energy (size) of cell to 1 (max size)
 void Cell::fillUpEnergy()
 {
 	energy = 1.0;
+}
+
+void Cell::setTouched()
+{
+	touched = 1;
+}
+
+bool Cell::isTouched()
+{
+	return touched > 0.9;
 }
 
 
@@ -32,6 +50,9 @@ void Cell::absorbEnergy(float e)
 ///Update energy in this cell and add some of the energy to the neighbors
 void Cell::update()
 {
+	//zmiejsz wartoœæ energi dotkniêcia
+	touched *= 0.95;
+
 	//oblicz iloœæ energi do dojêcia
 	float diffused = energy * 0.04;
 	//odejmij energiê danej komórki
@@ -55,10 +76,11 @@ void Cell::update()
 void Cell::draw()
 {
 	//iloœæ koloru niebieskiego zale¿y od iloœci energi i jest w granicy 200 do 255
+	float red = ofMap(touched, 0, 1, 0, 255);
 	float blue = ofMap(energy, 0, 1, 150, 200);
-	ofSetColor(50, 50, blue);
+	ofSetColor(red, 50, blue);
 	//rozmiar komórki zale¿y od pierwiastka energii
 	//³atwiej uzyskaæ wiêkszy rozmiar przy ma³ej iloœci energii
-	dim = ofMap(sqrt(energy), 0, 1, 2, 8);
+	dim = ofMap(sqrt(energy), 0, 1, 3, 10);
 	ofCircle(x, y, dim);
 }

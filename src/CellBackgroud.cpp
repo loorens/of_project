@@ -76,19 +76,56 @@ void CellBackgroud::draw()
 }
 
 ///Update background made of cells
-void CellBackgroud::update()
+void CellBackgroud::update(bool randomEnergy)
 {
 	for (int i = 0; i < cells.size(); i++)
 	{
 		cells[i]->update();
 	}
 
-	if ((counter++) % 10 == 0)
+	if (randomEnergy)
 	{
-		int r = (int)ofRandom(cells.size());
-		cells[r]->fillUpEnergy();
+		if ((counter++) % 10 == 0)
+		{
+			int r = (int)ofRandom(cells.size());
+			cells[r]->fillUpEnergy();
+		}
 	}
-	
+
+}
+
+///update background in places where are points of contour
+void CellBackgroud::updateWithPoints(vector<ofPoint>& points)
+{
+	//je¿eli lista punktów jest pusta to odœwierz aktualizuj bez nowych punktów
+	if (points.size() == 0)
+	{
+		update(false);
+		return;
+	}
+	ofPoint cell, point;
+
+	for (int i = 0; i < cells.size(); i++)
+	{
+		cell = cells[i]->getPosition();
+		//if (true)
+		if(!cells[i]->isTouched())
+		{
+			
+			for (int j = 0; j < points.size(); j++)
+			{
+				point = points[j];
+				if (cell.distance(point) < 10)
+				{
+					cells[i]->fillUpEnergy();
+					cells[i]->setTouched();
+				}
+			}
+		}
+	}
+
+
+	update(false);
 
 }
 

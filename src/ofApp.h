@@ -46,11 +46,11 @@ class ofApp : public ofBaseApp{
 
 		ofxCvContourFinder 	contourFinder;
 
-		vector<ofPoint> obj;	//object's centers
+		vector<ofPoint> contourPoints;	//punkty znalezione w konturze 
 
 		bool displayInfo, displayBackground, displayCamera, displayVideo, displayConturs;
 
 		bool captureBackground;
 		int desWidth, desHeight, threshold;
-		
+		float scaleX, scaleY;
 };
