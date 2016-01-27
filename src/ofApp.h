@@ -48,10 +48,6 @@ class ofApp : public ofBaseApp{
 
 		vector<ofPoint> obj;	//object's centers
 
-		//ofxCv::RunningBackground runningBackground;
-		//ofImage thresholdedBackgroundImage;
-		//ofImage grayscaledImage;
-		//ofImage prevImage;
 		bool displayInfo, displayBackground, displayCamera, displayVideo;
 
 		bool captureBackground;

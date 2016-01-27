@@ -17,7 +17,7 @@ void ofApp::setup() {
 
 	desWidth = 320;
 	desHeight = 240;
-	threshold = 40;
+	threshold = 20;
 	captureBackground = true;
 
 	cam.listDevices();
@@ -29,78 +29,78 @@ void ofApp::setup() {
 	cam.setDesiredFrameRate(30);
 
 
-	video.loadMovie("fruits.mov");	//Load the video file
-	video.play();					//Start the video to play	
+	//video.loadMovie("fruits.mov");
+	//video.play();					
 
 
 	imageDecimated.allocate(desWidth, desHeight);
-
-
-
+	
 }
 
 //--------------------------------------------------------------
 void ofApp::update() {
 	cam.update();
-	video.update();
+	//video.update();
 
-
-	if (video.isFrameNew())
+	//na pocz¹tku obraz z kamery jest czarny
+	//rozjaœnia siê dopiero po pewnym czasie
+	if (ofGetElapsedTimeMillis() < 2000)
 	{
-		//oblicz skalê o jak¹ nale¿y zmieniæ klatkê
-		float scaleX = (float)desWidth / video.getWidth();
-		float scaleY = (float)desHeight / video.getHeight();
+		captureBackground = true;
+	}
 
+	if (cam.isFrameNew())
+	{
 		//pobierz klatkê
-		image.setFromPixels(video.getPixelsRef());
+		image.setFromPixels(cam.getPixelsRef());
 
+		//zmiejsz klatke
 		imageDecimated.scaleIntoMe(image, CV_INTER_NN);
 
-
+		//konwersja do skali szaroœci
 		grayImage = imageDecimated;
 
-		//Smoothing image
+		//rozmycie obrazu
 		blurred = grayImage;
 		blurred.blurGaussian(9);
 
-		//Store first frame to background image
+		//pobierz pierwsz¹ klatke jako klatke bazow¹
 		if (captureBackground)
 		{
 			background = blurred;
 			captureBackground = false;
 		}
 
-		//Find difference of the frame and background
+		//ró¿nica klatki aktualnej i klatki bazowej
 		diff = blurred;
 		diff -= background;
 
-		//Thresholding for obtaining binary image
+		//binaryzacja róznycy klatek
+		//próg binaryzacji jest zmienny
 		mask = diff;
 		mask.threshold(threshold);
-		//Here value 40 is the threshold parameter. 
-		//It should be adjusted for good results when using another videos than in example.
 
-		//Find contours
+		//otwarcie
+		mask.erode();
+		mask.dilate();
+
+		//zamkniecie
+		mask.dilate();
+		mask.erode();
+
+
+		//znajdz kontury
 		contourFinder.findContours(mask, 10, 10000, 20, false);
 
-		//Store objects' centers
+		//przechowuj œrodki obiektów 
 		vector<ofxCvBlob>  &blobs = contourFinder.blobs;
-		int n = blobs.size();	//Get number of blobs
-		obj.resize(n);		//Resize obj array
-		for (int i = 0; i < n; i++) {
-			obj[i] = blobs[i].centroid;	//Fill obj array
+		int n = blobs.size();	//liczba bloków
+		obj.resize(n);		//zmiana rozmiaru wektora
+
+		for (int i = 0; i < n; i++) 
+		{
+			obj[i] = blobs[i].centroid;	//uzupe³nienie wektora œrodkami
 		}
-
-
-
-	}
-
-
-
-
-
-	if (cam.isFrameNew())
-	{
 
 	}
 
@@ -124,17 +124,16 @@ void ofApp::draw() {
 	if (displayVideo)
 	{
 		ofSetColor(255, 255, 255);
-		video.draw(ofGetWidth() - 320 - 20, ofGetHeight() - 240 - 20, 320, 240);
+		imageDecimated.draw(0, 0);
+		grayImage.draw(320, 0);
+		blurred.draw(640, 0);
+		diff.draw(0, 240);
+		mask.draw(320, 240);
+		background.draw(640, 240);
+
+		contourFinder.draw(320, 240);
 	}
 
-	ofSetColor(255, 255, 255);
-	imageDecimated.draw(0, 0);
-	grayImage.draw(320, 0);
-	blurred.draw(640, 0);
-	diff.draw(0, 240);
-	mask.draw(320, 240);
-
-	background.draw(640, 240);
 
 
 	if (displayInfo)
@@ -157,13 +156,13 @@ void ofApp::keyPressed(int key) {
 	{
 	case OF_KEY_UP: 
 		//zwiêkszanie progu binaryzacji
-		threshold += 5;
+		threshold += 2;
 		if (threshold > 255)
 			threshold = 255;
 		break;
 	case OF_KEY_DOWN: 
 		//zmiejszanie progu binaryzacji
-		threshold -= 5;
+		threshold -= 2;
 		if (threshold < 0)
 			threshold = 0;
 		break;
