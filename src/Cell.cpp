@@ -1,5 +1,9 @@
 #include "Cell.h"
 
+
+float Cell::minDim = 5.0;
+float Cell::maxDim = 15.0;
+
 ///Initialize new cell with coordinates
 Cell::Cell(float _x, float _y)
 {
@@ -81,6 +85,6 @@ void Cell::draw()
 	ofSetColor(red, 50, blue);
 	//rozmiar komórki zale¿y od pierwiastka energii
 	//³atwiej uzyskaæ wiêkszy rozmiar przy ma³ej iloœci energii
-	dim = ofMap(sqrt(energy), 0, 1, 3, 10);
+	dim = ofMap(sqrt(energy), 0, 1, minDim, maxDim);
 	ofCircle(x, y, dim);
 }

@@ -11,6 +11,7 @@ void ofApp::setup() {
 	//--------------------------------------------------------------
 	ofBackground(0, 0, 0);
 	displayBackground = true;
+
 	cellBackgroud = new CellBackgroud(ofGetWidth(), ofGetHeight(), 25);
 	cellBackgroud->setup();
 	//--------------------------------------------------------------
@@ -25,7 +26,7 @@ void ofApp::setup() {
 
 
 	cam.listDevices();
-	cam.setDeviceID(1);
+	cam.setDeviceID(0);
 	//cam.setup(640, 480);
 	//cam.setDesiredFrameRate(60);
 
@@ -58,6 +59,12 @@ void ofApp::update() {
 		//pobierz klatkê
 		image.setFromPixels(cam.getPixelsRef());
 
+		if (mirrorImage)
+		{
+			//odbicie obrazu w poziomie
+			image.mirror(false, true);
+		}
+		
 		//zmiejsz klatke
 		imageDecimated.scaleIntoMe(image, CV_INTER_NN);
 
@@ -113,13 +120,24 @@ void ofApp::update() {
 			}
 		}
 
+		//gdy wyst¹pi³ ruch u¿yj punktów w przeciwnym wypadku uzyj randomowych
+		if (contourPoints.size() > 0)
+		{
+			cellBackgroud->updateWithPoints(contourPoints);
+		}
+		else
+		{
+			cellBackgroud->updateWithRandomEnergy();
+		}
 
-		cellBackgroud->updateWithPoints(contourPoints);
 	}
 	else
 	{
-		cellBackgroud->update(false);
+		//gdy nie by³o nowej klatki to i tak aktualizuj t³o
+		cellBackgroud->update();
 	}
+	
+
 
 	
 }
@@ -153,7 +171,7 @@ void ofApp::draw() {
 	if (displayConturs)
 	{
 		ofSetColor(255, 255, 255, 64);
-		cam.draw(0, 0, ofGetWidth(), ofGetHeight());
+		image.draw(0, 0, ofGetWidth(), ofGetHeight());
 		contourFinder.draw(0, 0, ofGetWidth(), ofGetHeight());
 	}
 
@@ -223,6 +241,11 @@ void ofApp::keyPressed(int key) {
 	case 'V':
 		//wyswietlanie duzej liczy rzeczy xD
 		displayVideo = !displayVideo;
+		break;
+	case 'm':
+	case 'M':
+		//odbicie obrazu
+		mirrorImage = !mirrorImage;
 		break;
 	case 'z':
 	case 'Z':
@@ -311,6 +334,7 @@ void ofApp::drawInfo()
 	info += "[f] - fulscreen toggle\n";
 	info += "[c] - camera toggle\n";
 	info += "[k] - conturs toggle\n";
+	info += "[m] - mirror image\n";
 
 	ofSetColor(255, 255, 255);
 	ofDrawBitmapString(info, 10, 15);

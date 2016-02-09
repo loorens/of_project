@@ -16,7 +16,8 @@ public:
 	CellBackgroud(int _width, int _height, int _distance);
 	void setup();
 	void draw();
-	void update(bool randomEnergy);
+	void update();
+	void updateWithRandomEnergy();
 	void updateWithPoints(vector<ofPoint> & points);
 	void boom();
 

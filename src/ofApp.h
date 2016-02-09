@@ -49,6 +49,7 @@ class ofApp : public ofBaseApp{
 		vector<ofPoint> contourPoints;	//punkty znalezione w konturze 
 
 		bool displayInfo, displayBackground, displayCamera, displayVideo, displayConturs;
+		bool mirrorImage;
 
 		bool captureBackground;
 		int desWidth, desHeight, threshold;

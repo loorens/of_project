@@ -5,6 +5,7 @@
 class Cell
 {
 private:
+	static float minDim, maxDim;
 	float x, y, dim, touched;
 	ofPoint pos;
 	float energy, absorbedEnergy;
@@ -22,4 +23,6 @@ public:
 	void draw();
 
 };
+
+
 
