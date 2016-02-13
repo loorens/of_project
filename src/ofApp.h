@@ -3,6 +3,7 @@
 #include "ofMain.h"
 #include "CellBackgroud.h"
 #include "ofxOpenCv.h"
+#include "ofxBox2d.h"
 
 class ofApp : public ofBaseApp{
 
@@ -29,6 +30,14 @@ class ofApp : public ofBaseApp{
 		void drawInfo();
 		void highSoundDetected();
 
+
+
+		//---------------------------------------------------------------------------
+
+		ofxBox2d box2d;
+
+		vector <shared_ptr<ofxBox2dCircle> >		circles;
+		vector <shared_ptr<ofxBox2dEdge> >       edges;
 
 		//---------------------------------------------------------------------------
 
@@ -60,6 +69,6 @@ class ofApp : public ofBaseApp{
 		int width, height;
 		int desWidth, desHeight, threshold;
 		float scaleX, scaleY;
-		float rmsDisplay, maxRms, audioThreshold;
+		float rmsDisplay, audioThreshold;
 
 };

@@ -14,7 +14,6 @@ void ofApp::setup() {
 	soundStream.printDeviceList();
 	soundStream.setDeviceID(2);
 	soundStream.setup(this, 0, 4, 44100, 256, 8);
-	maxRms = 0.0;
 	audioThreshold = 0.15;
 
 	//--------------------------------------------------------------
@@ -57,6 +56,15 @@ void ofApp::setup() {
 
 
 	imageDecimated.allocate(desWidth, desHeight);
+
+
+
+	//--------------------------------------------------------------
+	// Box2d
+	box2d.init();
+	box2d.setGravity(0, 0);
+	box2d.createBounds(0, 0, width, height);
+	box2d.setFPS(60.0);
 
 }
 
@@ -123,7 +131,7 @@ void ofApp::update() {
 
 
 		contourPoints.clear();
-		/**/
+		/*
 		ofPoint point;
 		for (int i = 0; i < contourFinder.blobs.size(); i++)
 		{
@@ -157,7 +165,7 @@ void ofApp::update() {
 
 
 
-
+	box2d.update();
 }
 
 //--------------------------------------------------------------
@@ -193,6 +201,14 @@ void ofApp::draw() {
 		image.draw(0, 0, width, height);
 		contourFinder.draw(0, 0, width, height);
 	}
+
+
+	for (int i = 0; i < circles.size(); i++) {
+		ofFill();
+		ofSetHexColor(0xc0dd3b);
+		circles[i].get()->draw();
+	}
+
 
 
 	if (displayInfo)
@@ -266,6 +282,11 @@ void ofApp::keyPressed(int key) {
 		//odbicie obrazu
 		mirrorImage = !mirrorImage;
 		break;
+	case 'x':
+	case 'X':
+		//czyszczenie listy kuleczek
+		circles.clear();
+		break;
 	case 'z':
 	case 'Z':
 		//Debug
@@ -310,6 +331,20 @@ void ofApp::mousePressed(int x, int y, int button) {
 
 //--------------------------------------------------------------
 void ofApp::mouseReleased(int x, int y, int button) {
+
+	if (button == 0) //Lewy
+	{
+		shared_ptr<ofxBox2dCircle> c = shared_ptr<ofxBox2dCircle>(new ofxBox2dCircle);
+		c.get()->setPhysics(0.5, 0.6, 0.00001);
+		c.get()->setup(box2d.getWorld(), x, y, ofRandom(10, 30));
+		c.get()->setVelocity(ofRandom(-30, 30), ofRandom(-30, 30));
+		circles.push_back(c);
+	}
+	else if (button == 2) //Prawy
+	{
+		if (circles.size() > 0)
+			circles.erase(circles.begin());
+	}
 
 }
 
@@ -358,7 +393,6 @@ void ofApp::audioIn(float * input, int bufferSize, int nChannels) {
 	rms = sqrt(rms);
 	rmsDisplay = rms;
 
-	if (rmsDisplay > maxRms) maxRms = rmsDisplay;
 	if (rmsDisplay > audioThreshold)
 		highSoundDetected();
 }
@@ -379,7 +413,6 @@ void ofApp::drawInfo()
 	info += "FPS: " + ofToString(ofGetFrameRate(), 1) + "\n";
 	info += "Threshold [Arrow up down]: " + ofToString(threshold, 2) + "\n";
 	info += "RMS: " + ofToString(rmsDisplay, 3) + "\n";
-	info += "MAX RMS: " + ofToString(maxRms, 3) + "\n";
 	info += "[r] - reset base frame to current\n";
 	info += "[SPACE] - cell backgroud boom\n";
 	info += "[b] - cell backgroud toggle\n";
@@ -387,6 +420,9 @@ void ofApp::drawInfo()
 	info += "[c] - camera toggle\n";
 	info += "[k] - conturs toggle\n";
 	info += "[m] - mirror image\n";
+	info += "[x] - clear circles\n";
+	info += "[Left mouse] - add circle\n";
+	info += "[Rught mouse] - delete circle\n";
 
 
 
