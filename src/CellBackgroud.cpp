@@ -125,7 +125,7 @@ void CellBackgroud::updateWithPoints(vector<ofPoint>& points)
 	update();
 }
 
-
+//update cells of background where colisios is detected with circle
 void CellBackgroud::updateWithCircles(vector <shared_ptr<ofxBox2dCircle> > circles)
 {
 	//je¿eli lista punktów jest pusta to odœwierz aktualizuj bez nowych punktów
@@ -152,7 +152,6 @@ void CellBackgroud::updateWithCircles(vector <shared_ptr<ofxBox2dCircle> > circl
 		}
 	}
 	update();
-
 }
 
 

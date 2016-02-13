@@ -24,11 +24,13 @@ void Cell::addNeighbors(Cell * c)
 	neighbors.push_back(c);
 }
 
+///return position of the cell
 ofPoint Cell::getPosition()
 {
 	return pos;
 }
 
+///return radius of the cell
 float Cell::getRadius()
 {
 	return dim;
@@ -40,21 +42,25 @@ void Cell::fillUpEnergy()
 	energy = 1.0;
 }
 
+/// set contact to 1.0, (more green color)
 void Cell::setContact()
 {
 	contact = 1.0;
 }
 
+///check if contact was made
 bool Cell::isContact()
 {
 	return contact > 0.95;
 }
 
+///set cell was touchet by countur (move on camera)
 void Cell::setTouched()
 {
 	touched = 1.0;
 }
 
+///check if call was touched (by move on camera)
 bool Cell::isTouched()
 {
 	return touched > 0.9;
