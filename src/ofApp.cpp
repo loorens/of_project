@@ -125,13 +125,39 @@ void ofApp::update() {
 		mask.dilate();
 		mask.erode();
 
-
 		//znajdz kontury
 		contourFinder.findContours(mask, 20, (320 * 240), 5, false);
 
+		//wyczysc krawedzie
+		edges.clear();
 
+		for (int i = 0; i < contourFinder.blobs.size(); i++)
+		{
+			if (contourFinder.blobs[i].pts.size() > 3)
+			{
+				//przepisywanie i skalowanie
+				vector <ofVec2f> p;
+				for (int j = 0; j < contourFinder.blobs[i].pts.size(); j++)
+				{
+					ofVec2f v = ofVec2f(contourFinder.blobs[i].pts[j].x * scaleX, contourFinder.blobs[i].pts[j].y * scaleY);
+					p.push_back(v);
+				}
+
+				//dodwanie krawedzi
+				edges.push_back(ofPtr<ofxBox2dEdge>(new ofxBox2dEdge));
+				edges.back().get()->setPhysics(3.0, 0.53, 0.1);
+				edges.back().get()->addVertexes(p);
+				edges.back().get()->setPhysics(0.0, 0.5, 0.5);
+				edges.back().get()->create(box2d.getWorld());
+			}
+		}
+
+	}
+
+
+	if (detectConturs)
+	{
 		contourPoints.clear();
-		/*
 		ofPoint point;
 		for (int i = 0; i < contourFinder.blobs.size(); i++)
 		{
@@ -145,29 +171,10 @@ void ofApp::update() {
 				contourPoints.push_back(point);
 			}
 		}
-		/**/
-		/*
-		//gdy wyst¹pi³ ruch u¿yj punktów w przeciwnym wypadku uzyj randomowych
-		if (contourPoints.size() > 0)
-		{
-			cellBackgroud->updateWithPoints(contourPoints);
-		}
-		else
-		{
-			cellBackgroud->updateWithRandomEnergy();
-		}
-		/**/
+		cellBackgroud->updateWithPoints(contourPoints);
 	}
-	else
-	{
-		//gdy nie by³o nowej klatki to i tak aktualizuj t³o
-		
-
-		
-	}
-
 	cellBackgroud->updateWithCircles(circles);
-	
+
 
 	box2d.update();
 }
@@ -199,13 +206,6 @@ void ofApp::draw() {
 
 		contourFinder.draw(320, 240);
 	}
-	if (displayConturs)
-	{
-		ofSetColor(255, 255, 255, 64);
-		image.draw(0, 0, width, height);
-		contourFinder.draw(0, 0, width, height);
-	}
-
 
 	for (int i = 0; i < circles.size(); i++) {
 		ofFill();
@@ -213,6 +213,11 @@ void ofApp::draw() {
 		circles[i].get()->draw();
 	}
 
+	ofSetColor(255, 100, 100);
+	ofNoFill();
+	for (int i = 0; i < edges.size(); i++) {
+		edges[i].get()->draw();
+	}
 
 
 	if (displayInfo)
@@ -259,7 +264,7 @@ void ofApp::keyPressed(int key) {
 	case 'k':
 	case 'K':
 		//rysowanie konturów na ekranie
-		displayConturs = !displayConturs;
+		detectConturs = !detectConturs;
 		break;
 	case 'b':
 	case 'B':
@@ -413,10 +418,10 @@ void ofApp::drawInfo()
 	ofDrawRectangle(ofGetWidth() - 320, ofGetHeight() - 240, 320, 240);
 
 	string info = "";
-	info += "[i] - informacje\n";
+	info += "[i] - info ON/OFF\n";
 	info += "FPS: " + ofToString(ofGetFrameRate(), 1) + "\n";
 	info += "Threshold [Arrow up down]: " + ofToString(threshold, 2) + "\n";
-	info += "RMS: " + ofToString(rmsDisplay, 3) + "\n";
+	info += "Volume: " + ofToString(rmsDisplay, 3) + "\n";
 	info += "[r] - reset base frame to current\n";
 	info += "[SPACE] - cell backgroud boom\n";
 	info += "[b] - cell backgroud toggle\n";

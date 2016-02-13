@@ -112,5 +112,6 @@ void Cell::draw()
 	//rozmiar komórki zale¿y od pierwiastka energii
 	//³atwiej uzyskaæ wiêkszy rozmiar przy ma³ej iloœci energii
 	dim = ofMap(energy, 0, 1, minDim, maxDim);
+	ofFill();
 	ofCircle(x, y, dim);
 }

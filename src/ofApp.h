@@ -36,8 +36,8 @@ class ofApp : public ofBaseApp{
 
 		ofxBox2d box2d;
 
-		vector <shared_ptr<ofxBox2dCircle> >		circles;
-		vector <shared_ptr<ofxBox2dEdge> >       edges;
+		vector <shared_ptr<ofxBox2dCircle> > circles;
+		vector <shared_ptr<ofxBox2dEdge> > edges;
 
 		//---------------------------------------------------------------------------
 
@@ -62,7 +62,7 @@ class ofApp : public ofBaseApp{
 		ofSoundPlayer ding;
 		ofSoundStream soundStream;
 
-		bool displayInfo, displayBackground, displayCamera, displayVideo, displayConturs;
+		bool displayInfo, displayBackground, displayCamera, displayVideo, detectConturs;
 		bool mirrorImage;
 
 		bool captureBackground;
