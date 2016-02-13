@@ -535,6 +535,7 @@
     </ResourceCompile>
   </ItemGroup>
   <ItemGroup>
+    <Media Include="Content\ding.mp3" />
     <Media Include="Content\fruits.mov" />
     <Media Include="Content\handsTrees.mov" />
   </ItemGroup>

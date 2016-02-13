@@ -1237,5 +1237,8 @@
     <Media Include="Content\handsTrees.mov">
       <Filter>Content</Filter>
     </Media>
+    <Media Include="Content\ding.mp3">
+      <Filter>Content</Filter>
+    </Media>
   </ItemGroup>
 </Project>
