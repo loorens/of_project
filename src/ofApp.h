@@ -48,6 +48,8 @@ class ofApp : public ofBaseApp{
 
 		vector<ofPoint> contourPoints;	//punkty znalezione w konturze 
 
+		ofSoundPlayer ding;
+
 		bool displayInfo, displayBackground, displayCamera, displayVideo, displayConturs;
 		bool mirrorImage;
 

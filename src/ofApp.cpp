@@ -9,6 +9,10 @@ void ofApp::setup() {
 	ofEnableSmoothing();
 
 	//--------------------------------------------------------------
+
+	ding.loadSound("ding.mp3");
+
+	//--------------------------------------------------------------
 	ofBackground(0, 0, 0);
 	displayCamera = true;
 	displayBackground = true;
@@ -271,6 +275,7 @@ void ofApp::keyPressed(int key) {
 	case ' ':
 		//SPACJA - boom t³a 
 		cellBackgroud->boom();
+		ding.play();
 		break;
 	default:
 		break;
