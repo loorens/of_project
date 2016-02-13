@@ -52,6 +52,7 @@ class ofApp : public ofBaseApp{
 		bool mirrorImage;
 
 		bool captureBackground;
+		int width, height;
 		int desWidth, desHeight, threshold;
 		float scaleX, scaleY;
 };

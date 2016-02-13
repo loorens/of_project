@@ -10,23 +10,32 @@ void ofApp::setup() {
 
 	//--------------------------------------------------------------
 	ofBackground(0, 0, 0);
+	displayCamera = true;
 	displayBackground = true;
-
-	cellBackgroud = new CellBackgroud(ofGetWidth(), ofGetHeight(), 25);
-	cellBackgroud->setup();
-	//--------------------------------------------------------------
+	displayInfo = true;
 
 	desWidth = 320;
 	desHeight = 240;
+
+	width = desWidth * 3; //960
+	height = desHeight * 3; //720
+
+	cellBackgroud = new CellBackgroud(width, height, 25);
+	cellBackgroud->setup();
+	//--------------------------------------------------------------
+
+
+
+	
 	threshold = 20;
 	captureBackground = true;
 
-	scaleX = (float)ofGetWidth() / (float)desWidth;
-	scaleY = (float)ofGetHeight() / (float)desHeight;
+	scaleX = (float)width / (float)desWidth;
+	scaleY = (float)height / (float)desHeight;
 
 
 	cam.listDevices();
-	cam.setDeviceID(0);
+	cam.setDeviceID(1);
 	//cam.setup(640, 480);
 	//cam.setDesiredFrameRate(60);
 
@@ -105,7 +114,7 @@ void ofApp::update() {
 
 
 		contourPoints.clear();
-
+		/**/
 		ofPoint point;
 		for (int i = 0; i < contourFinder.blobs.size(); i++)
 		{
@@ -119,7 +128,7 @@ void ofApp::update() {
 				contourPoints.push_back(point);
 			}
 		}
-
+		/**/
 		//gdy wyst¹pi³ ruch u¿yj punktów w przeciwnym wypadku uzyj randomowych
 		if (contourPoints.size() > 0)
 		{
@@ -154,7 +163,8 @@ void ofApp::draw() {
 	if (displayCamera)
 	{
 		ofSetColor(255, 255, 255);
-		cam.draw(ofGetWidth() - 320 - 20, ofGetHeight() - 240 - 20, 320, 240);
+		image.draw(ofGetWidth() - 320, 0, 320, 240);
+		contourFinder.draw(ofGetWidth() - 320, 0, 320, 240);
 	}
 	if (displayVideo)
 	{
@@ -171,8 +181,8 @@ void ofApp::draw() {
 	if (displayConturs)
 	{
 		ofSetColor(255, 255, 255, 64);
-		image.draw(0, 0, ofGetWidth(), ofGetHeight());
-		contourFinder.draw(0, 0, ofGetWidth(), ofGetHeight());
+		image.draw(0, 0, width, height);
+		contourFinder.draw(0, 0, width, height);
 	}
 
 
@@ -322,7 +332,7 @@ void ofApp::dragEvent(ofDragInfo dragInfo) {
 void ofApp::drawInfo()
 {
 	ofSetColor(77, 77, 77, 180);
-	ofDrawRectangle(0, 0, 300, 150);
+	ofDrawRectangle(ofGetWidth() - 320, ofGetHeight() - 240, 320, 240);
 
 	string info = "";
 	info += "[i] - informacje\n";
@@ -337,5 +347,5 @@ void ofApp::drawInfo()
 	info += "[m] - mirror image\n";
 
 	ofSetColor(255, 255, 255);
-	ofDrawBitmapString(info, 10, 15);
+	ofDrawBitmapString(info, ofGetWidth() - 310, ofGetHeight() - 220);
 }
