@@ -146,6 +146,7 @@ void ofApp::update() {
 			}
 		}
 		/**/
+		/*
 		//gdy wyst¹pi³ ruch u¿yj punktów w przeciwnym wypadku uzyj randomowych
 		if (contourPoints.size() > 0)
 		{
@@ -155,15 +156,18 @@ void ofApp::update() {
 		{
 			cellBackgroud->updateWithRandomEnergy();
 		}
-
+		/**/
 	}
 	else
 	{
 		//gdy nie by³o nowej klatki to i tak aktualizuj t³o
-		cellBackgroud->update();
+		
+
+		
 	}
 
-
+	cellBackgroud->updateWithCircles(circles);
+	
 
 	box2d.update();
 }

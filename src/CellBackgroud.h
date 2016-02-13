@@ -1,6 +1,7 @@
 #pragma once
 #include "ofMain.h"
 #include "Cell.h"
+#include "ofxBox2d.h"
 
 class CellBackgroud
 {
@@ -19,6 +20,7 @@ public:
 	void update();
 	void updateWithRandomEnergy();
 	void updateWithPoints(vector<ofPoint> & points);
+	void updateWithCircles(vector <shared_ptr<ofxBox2dCircle> > circles);
 	void boom();
 
 };

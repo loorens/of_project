@@ -109,7 +109,7 @@ void CellBackgroud::updateWithPoints(vector<ofPoint>& points)
 	for (int i = 0; i < cells.size(); i++)
 	{
 		cell = cells[i]->getPosition();
-		if(!cells[i]->isTouched())
+		if (!cells[i]->isTouched())
 		{
 			for (int j = 0; j < points.size(); j++)
 			{
@@ -124,6 +124,37 @@ void CellBackgroud::updateWithPoints(vector<ofPoint>& points)
 	}
 	update();
 }
+
+
+void CellBackgroud::updateWithCircles(vector <shared_ptr<ofxBox2dCircle> > circles)
+{
+	//je¿eli lista punktów jest pusta to odœwierz aktualizuj bez nowych punktów
+	if (circles.size() == 0)
+	{
+		update();
+		return;
+	}
+
+	for (int i = 0; i < cells.size(); i++)
+	{
+		ofPoint cell;
+		cell = cells[i]->getPosition();
+		if (!cells[i]->isContact())
+		{
+			for (int j = 0; j < circles.size(); j++)
+			{
+				if (cell.distance(circles[j]->getPosition()) < cells[i]->getRadius() + circles[j]->getRadius())
+				{
+					cells[i]->fillUpEnergy();
+					cells[i]->setContact();
+				}
+			}
+		}
+	}
+	update();
+
+}
+
 
 ///Fill up energy of 10% of cells
 void CellBackgroud::boom()
