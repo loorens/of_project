@@ -23,9 +23,11 @@ class ofApp : public ofBaseApp{
 		void dragEvent(ofDragInfo dragInfo);
 		void gotMessage(ofMessage msg);
 
+		void audioIn(float * input, int bufferSize, int nChannels);
 		//---------------------------------------------------------------------------
 		
 		void drawInfo();
+		void highSoundDetected();
 
 
 		//---------------------------------------------------------------------------
@@ -49,6 +51,7 @@ class ofApp : public ofBaseApp{
 		vector<ofPoint> contourPoints;	//punkty znalezione w konturze 
 
 		ofSoundPlayer ding;
+		ofSoundStream soundStream;
 
 		bool displayInfo, displayBackground, displayCamera, displayVideo, displayConturs;
 		bool mirrorImage;
@@ -57,4 +60,6 @@ class ofApp : public ofBaseApp{
 		int width, height;
 		int desWidth, desHeight, threshold;
 		float scaleX, scaleY;
+		float rmsDisplay, maxRms, audioThreshold;
+
 };

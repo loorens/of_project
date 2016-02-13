@@ -11,6 +11,11 @@ void ofApp::setup() {
 	//--------------------------------------------------------------
 
 	ding.loadSound("ding.mp3");
+	soundStream.printDeviceList();
+	soundStream.setDeviceID(2);
+	soundStream.setup(this, 0, 4, 44100, 256, 8);
+	maxRms = 0.0;
+	audioThreshold = 0.15;
 
 	//--------------------------------------------------------------
 	ofBackground(0, 0, 0);
@@ -30,7 +35,7 @@ void ofApp::setup() {
 
 
 
-	
+
 	threshold = 20;
 	captureBackground = true;
 
@@ -77,7 +82,7 @@ void ofApp::update() {
 			//odbicie obrazu w poziomie
 			image.mirror(false, true);
 		}
-		
+
 		//zmiejsz klatke
 		imageDecimated.scaleIntoMe(image, CV_INTER_NN);
 
@@ -149,10 +154,10 @@ void ofApp::update() {
 		//gdy nie by³o nowej klatki to i tak aktualizuj t³o
 		cellBackgroud->update();
 	}
-	
 
 
-	
+
+
 }
 
 //--------------------------------------------------------------
@@ -334,6 +339,36 @@ void ofApp::dragEvent(ofDragInfo dragInfo) {
 
 }
 
+
+void ofApp::audioIn(float * input, int bufferSize, int nChannels) {
+
+	float rms = 0.0;
+	int numCounted = 0;
+
+	for (int i = 0; i < bufferSize; i++) {
+		float leftSample = input[i * 2] * 0.5;
+		float rightSample = input[i * 2 + 1] * 0.5;
+
+		rms += leftSample * leftSample;
+		rms += rightSample * rightSample;
+		numCounted += 2;
+	}
+
+	rms /= (float)numCounted;
+	rms = sqrt(rms);
+	rmsDisplay = rms;
+
+	if (rmsDisplay > maxRms) maxRms = rmsDisplay;
+	if (rmsDisplay > audioThreshold)
+		highSoundDetected();
+}
+
+void ofApp::highSoundDetected()
+{
+	cellBackgroud->boom();
+	ding.play();
+}
+
 void ofApp::drawInfo()
 {
 	ofSetColor(77, 77, 77, 180);
@@ -342,7 +377,9 @@ void ofApp::drawInfo()
 	string info = "";
 	info += "[i] - informacje\n";
 	info += "FPS: " + ofToString(ofGetFrameRate(), 1) + "\n";
-	info += "Threshold [Arrow up down]: " + ofToString(threshold) + "\n";
+	info += "Threshold [Arrow up down]: " + ofToString(threshold, 2) + "\n";
+	info += "RMS: " + ofToString(rmsDisplay, 3) + "\n";
+	info += "MAX RMS: " + ofToString(maxRms, 3) + "\n";
 	info += "[r] - reset base frame to current\n";
 	info += "[SPACE] - cell backgroud boom\n";
 	info += "[b] - cell backgroud toggle\n";
@@ -350,6 +387,8 @@ void ofApp::drawInfo()
 	info += "[c] - camera toggle\n";
 	info += "[k] - conturs toggle\n";
 	info += "[m] - mirror image\n";
+
+
 
 	ofSetColor(255, 255, 255);
 	ofDrawBitmapString(info, ofGetWidth() - 310, ofGetHeight() - 220);
