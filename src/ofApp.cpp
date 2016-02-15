@@ -1,7 +1,6 @@
 #include "ofApp.h"
 
 
-
 //--------------------------------------------------------------
 void ofApp::setup() {
 	ofSetWindowTitle("Projekt Dominik Tomasiewicz 41K9");
@@ -10,7 +9,6 @@ void ofApp::setup() {
 
 	//--------------------------------------------------------------
 
-	//ding.loadSound("ding.mp3");
 	pop.loadSound("pop.mp3");
 	bubble.loadSound("bubble.mp3");
 	soundStream.printDeviceList();
@@ -22,6 +20,7 @@ void ofApp::setup() {
 	ofBackground(0, 0, 0);
 	displayCamera = true;
 	displayBackground = true;
+	displayVideo = true;
 
 	desWidth = 320;
 	desHeight = 240;
@@ -34,14 +33,11 @@ void ofApp::setup() {
 	//--------------------------------------------------------------
 
 
-
-
 	threshold = 20;
 	captureBackground = true;
 
 	scaleX = (float)width / (float)desWidth;
 	scaleY = (float)height / (float)desHeight;
-
 
 	cam.listDevices();
 	cam.setDeviceID(1);
@@ -51,13 +47,7 @@ void ofApp::setup() {
 	cam.setup(320, 240);
 	cam.setDesiredFrameRate(30);
 
-
-	//video.loadMovie("fruits.mov");
-	//video.play();					
-
-
 	imageDecimated.allocate(desWidth, desHeight);
-
 
 
 	//--------------------------------------------------------------
@@ -75,7 +65,6 @@ void ofApp::setup() {
 //--------------------------------------------------------------
 void ofApp::update() {
 	cam.update();
-	//video.update();
 
 	//na pocz¹tku obraz z kamery jest czarny
 	//rozjaœnia siê dopiero po pewnym czasie
@@ -200,14 +189,12 @@ void ofApp::draw() {
 	if (displayVideo)
 	{
 		ofSetColor(255, 255, 255);
-		imageDecimated.draw(0, 0);
-		grayImage.draw(320, 0);
-		blurred.draw(640, 0);
-		diff.draw(0, 240);
-		mask.draw(320, 240);
-		background.draw(640, 240);
-
-		contourFinder.draw(320, 240);
+		background.draw(ofGetWidth() - 320, 240, 320, 240);
+	}
+	else
+	{
+		ofSetColor(255, 255, 255);
+		mask.draw(ofGetWidth() - 320, 240, 320, 240);
 	}
 
 	for (int i = 0; i < circles.size(); i++) {
@@ -221,7 +208,6 @@ void ofApp::draw() {
 	for (int i = 0; i < edges.size(); i++) {
 		edges[i].get()->draw();
 	}
-
 
 	drawInfo();
 }
@@ -251,11 +237,6 @@ void ofApp::keyPressed(int key) {
 		if (threshold < 0)
 			threshold = 0;
 		break;
-	case 'f':
-	case 'F':
-		//uruchamianie trybu pe³noekranowego ???
-		ofToggleFullscreen();
-		break;
 	case 'k':
 	case 'K':
 		//rysowanie konturów na ekranie
@@ -269,7 +250,7 @@ void ofApp::keyPressed(int key) {
 	case 'c':
 	case 'C':
 		//wyœwietl aktualny obreaz kamery
-		displayCamera = !displayCamera;
+		//displayCamera = !displayCamera;
 		break;
 	case 'r':
 	case 'R':
@@ -283,24 +264,14 @@ void ofApp::keyPressed(int key) {
 		break;
 	case 'm':
 	case 'M':
-		//odbicie obrazu
+		//odbicie obrazu, po odbiciu resetuj ramke bazow¹
 		mirrorImage = !mirrorImage;
+		captureBackground = true;
 		break;
 	case 'x':
 	case 'X':
 		//czyszczenie listy kuleczek
 		circles.clear();
-		break;
-	case 'z':
-	case 'Z':
-		//Debug
-		n = 0;
-		for (int i = 0; i < contourFinder.blobs.size(); i++)
-		{
-			n += contourFinder.blobs[i].nPts;
-		}
-		printf("%d\n", n);
-
 		break;
 	case ' ':
 		//SPACJA - boom t³a 
@@ -402,7 +373,7 @@ void ofApp::highSoundDetected()
 {
 	cellBackgroud->boom();
 
-	for (int i = 0; i < 1; i++)
+	for (int i = 0; i < 2; i++)
 	{
 		addBox2DCircle(ofRandom(width), ofRandom(height));
 	}
@@ -425,18 +396,15 @@ void ofApp::drawInfo()
 	string info = "";
 	info += "FPS: " + ofToString(ofGetFrameRate(), 1) + "\n";
 	info += "Threshold [Arrow up down]: " + ofToString(threshold, 2) + "\n";
-	info += "Volume: " + ofToString(rmsDisplay, 3) + "\n";
+	info += "Mic volume: " + ofToString(rmsDisplay, 3) + "\n";
 	info += "[r] - reset base frame to current\n";
 	info += "[SPACE] - cell backgroud boom\n";
 	info += "[b] - cell backgroud toggle\n";
-	info += "[f] - fulscreen toggle\n";
-	info += "[c] - camera toggle\n";
 	info += "[k] - conturs toggle\n";
 	info += "[m] - mirror image\n";
 	info += "[x] - clear circles\n";
 	info += "[Left mouse] - add circle\n";
 	info += "[Rught mouse] - delete circle\n";
-
 
 
 	ofSetColor(255, 255, 255);

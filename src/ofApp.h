@@ -31,8 +31,6 @@ class ofApp : public ofBaseApp{
 		void highSoundDetected();
 		void addBox2DCircle(int x, int y);
 
-
-
 		//---------------------------------------------------------------------------
 
 		ofxBox2d box2d;
@@ -62,10 +60,13 @@ class ofApp : public ofBaseApp{
 
 		vector<ofPoint> contourPoints;	//punkty znalezione w konturze 
 
-		//ofSoundPlayer ding;
+		//---------------------------------------------------------------------------
+
 		ofSoundPlayer pop;
 		ofSoundPlayer bubble;
 		ofSoundStream soundStream;
+
+		//---------------------------------------------------------------------------
 
 		bool displayBackground, displayCamera, displayVideo, detectConturs;
 		bool mirrorImage;
