@@ -338,11 +338,8 @@ void ofApp::mouseReleased(int x, int y, int button) {
 
 	if (button == 0) //Lewy
 	{
-		shared_ptr<ofxBox2dCircle> c = shared_ptr<ofxBox2dCircle>(new ofxBox2dCircle);
-		c.get()->setPhysics(0.5, 0.6, 0.00001);
-		c.get()->setup(box2d.getWorld(), x, y, ofRandom(10, 30));
-		c.get()->setVelocity(ofRandom(-30, 30), ofRandom(-30, 30));
-		circles.push_back(c);
+		addBox2DCircle(x, y);
+
 	}
 	else if (button == 2) //Prawy
 	{
@@ -404,9 +401,21 @@ void ofApp::audioIn(float * input, int bufferSize, int nChannels) {
 void ofApp::highSoundDetected()
 {
 	cellBackgroud->boom();
-	
 
+	for (int i = 0; i < 1; i++)
+	{
+		addBox2DCircle(ofRandom(width), ofRandom(height));
+	}
 }
+void ofApp::addBox2DCircle(int x, int y)
+{
+	shared_ptr<ofxBox2dCircle> c = shared_ptr<ofxBox2dCircle>(new ofxBox2dCircle);
+	c.get()->setPhysics(0.5, 0.6, 0.00001);
+	c.get()->setup(box2d.getWorld(), x, y, ofRandom(10, 30));
+	c.get()->setVelocity(ofRandom(-30, 30), ofRandom(-30, 30));
+	circles.push_back(c);
+}
+
 
 void ofApp::drawInfo()
 {
@@ -438,7 +447,7 @@ void ofApp::drawInfo()
 //--------------------------------------------------------------
 void ofApp::contactStart(ofxBox2dContactArgs &e) {
 
-	if (e.a != NULL && e.b != NULL) 
+	if (e.a != NULL && e.b != NULL)
 	{
 		if (e.a->GetType() == b2Shape::e_circle &&  e.b->GetType() == b2Shape::e_circle)
 		{
@@ -448,7 +457,7 @@ void ofApp::contactStart(ofxBox2dContactArgs &e) {
 		{
 			pop.play();
 		}
-		
+
 	}
 }
 

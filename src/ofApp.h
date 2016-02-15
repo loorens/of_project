@@ -29,6 +29,7 @@ class ofApp : public ofBaseApp{
 		
 		void drawInfo();
 		void highSoundDetected();
+		void addBox2DCircle(int x, int y);
 
 
 
