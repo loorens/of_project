@@ -10,7 +10,9 @@ void ofApp::setup() {
 
 	//--------------------------------------------------------------
 
-	ding.loadSound("ding.mp3");
+	//ding.loadSound("ding.mp3");
+	pop.loadSound("pop.mp3");
+	bubble.loadSound("bubble.mp3");
 	soundStream.printDeviceList();
 	soundStream.setDeviceID(2);
 	soundStream.setup(this, 0, 4, 44100, 256, 8);
@@ -20,7 +22,6 @@ void ofApp::setup() {
 	ofBackground(0, 0, 0);
 	displayCamera = true;
 	displayBackground = true;
-	displayInfo = true;
 
 	desWidth = 320;
 	desHeight = 240;
@@ -62,9 +63,12 @@ void ofApp::setup() {
 	//--------------------------------------------------------------
 	// Box2d
 	box2d.init();
-	box2d.setGravity(0, 0);
+	box2d.enableEvents();
+	box2d.setGravity(0, 1);
 	box2d.createBounds(0, 0, width, height);
 	box2d.setFPS(60.0);
+
+	ofAddListener(box2d.contactStartEvents, this, &ofApp::contactStart);
 
 }
 
@@ -145,9 +149,8 @@ void ofApp::update() {
 
 				//dodwanie krawedzi
 				edges.push_back(ofPtr<ofxBox2dEdge>(new ofxBox2dEdge));
-				edges.back().get()->setPhysics(3.0, 0.53, 0.1);
 				edges.back().get()->addVertexes(p);
-				edges.back().get()->setPhysics(0.0, 0.5, 0.5);
+				edges.back().get()->setPhysics(0.0, 5.1, 0.0);
 				edges.back().get()->create(box2d.getWorld());
 			}
 		}
@@ -220,10 +223,7 @@ void ofApp::draw() {
 	}
 
 
-	if (displayInfo)
-	{
-		drawInfo();
-	}
+	drawInfo();
 }
 
 
@@ -250,11 +250,6 @@ void ofApp::keyPressed(int key) {
 		threshold -= 2;
 		if (threshold < 0)
 			threshold = 0;
-		break;
-	case 'i':
-	case 'I':
-		//wyœwietlanie tabelki z inforacjami
-		displayInfo = !displayInfo;
 		break;
 	case 'f':
 	case 'F':
@@ -310,7 +305,7 @@ void ofApp::keyPressed(int key) {
 	case ' ':
 		//SPACJA - boom t³a 
 		cellBackgroud->boom();
-		ding.play();
+		pop.play();
 		break;
 	default:
 		break;
@@ -409,7 +404,8 @@ void ofApp::audioIn(float * input, int bufferSize, int nChannels) {
 void ofApp::highSoundDetected()
 {
 	cellBackgroud->boom();
-	ding.play();
+	
+
 }
 
 void ofApp::drawInfo()
@@ -418,7 +414,6 @@ void ofApp::drawInfo()
 	ofDrawRectangle(ofGetWidth() - 320, ofGetHeight() - 240, 320, 240);
 
 	string info = "";
-	info += "[i] - info ON/OFF\n";
 	info += "FPS: " + ofToString(ofGetFrameRate(), 1) + "\n";
 	info += "Threshold [Arrow up down]: " + ofToString(threshold, 2) + "\n";
 	info += "Volume: " + ofToString(rmsDisplay, 3) + "\n";
@@ -438,3 +433,22 @@ void ofApp::drawInfo()
 	ofSetColor(255, 255, 255);
 	ofDrawBitmapString(info, ofGetWidth() - 310, ofGetHeight() - 220);
 }
+
+
+//--------------------------------------------------------------
+void ofApp::contactStart(ofxBox2dContactArgs &e) {
+
+	if (e.a != NULL && e.b != NULL) 
+	{
+		if (e.a->GetType() == b2Shape::e_circle &&  e.b->GetType() == b2Shape::e_circle)
+		{
+			bubble.play();
+		}
+		else
+		{
+			pop.play();
+		}
+		
+	}
+}
+

@@ -535,9 +535,11 @@
     </ResourceCompile>
   </ItemGroup>
   <ItemGroup>
+    <Media Include="Content\bubble.mp3" />
     <Media Include="Content\ding.mp3" />
     <Media Include="Content\fruits.mov" />
     <Media Include="Content\handsTrees.mov" />
+    <Media Include="Content\pop.mp3" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ProjectExtensions>

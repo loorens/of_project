@@ -1240,5 +1240,11 @@
     <Media Include="Content\ding.mp3">
       <Filter>Content</Filter>
     </Media>
+    <Media Include="Content\bubble.mp3">
+      <Filter>Content</Filter>
+    </Media>
+    <Media Include="Content\pop.mp3">
+      <Filter>Content</Filter>
+    </Media>
   </ItemGroup>
 </Project>

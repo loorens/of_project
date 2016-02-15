@@ -39,6 +39,8 @@ class ofApp : public ofBaseApp{
 		vector <shared_ptr<ofxBox2dCircle> > circles;
 		vector <shared_ptr<ofxBox2dEdge> > edges;
 
+		void contactStart(ofxBox2dContactArgs &e);
+
 		//---------------------------------------------------------------------------
 
 		
@@ -59,10 +61,12 @@ class ofApp : public ofBaseApp{
 
 		vector<ofPoint> contourPoints;	//punkty znalezione w konturze 
 
-		ofSoundPlayer ding;
+		//ofSoundPlayer ding;
+		ofSoundPlayer pop;
+		ofSoundPlayer bubble;
 		ofSoundStream soundStream;
 
-		bool displayInfo, displayBackground, displayCamera, displayVideo, detectConturs;
+		bool displayBackground, displayCamera, displayVideo, detectConturs;
 		bool mirrorImage;
 
 		bool captureBackground;
